@@ -22,8 +22,6 @@ sqlBuilder = {
     // ---------------- insert ---------------- //
 
     insert: (request) => {
-        if (!request.doc.id) request.doc.id = j_.uaid('id')
-
         let insertMap = Object.keys(request.doc).map(k => {
             return {
                 key: k,
