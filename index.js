@@ -2,13 +2,10 @@ const j_ = require('@jmellicker/j_')
 const c = require('./logs')
 
 module.exports = {
-    req: {
-        description: "accepts a request object, executes and returns a result",
-        action: (request) => {
-            let sql = sqlBuilder[request.method](request)
-            sql = sql.replace(/\s\s+/g, ' ').trim() + ';'
-            return sql
-        }
+    buildSQL(request) {
+        let sql = sqlBuilder[request.method](request)
+        sql = sql.replace(/\s\s+/g, ' ').trim() + ';'
+        return sql
     }
 }
 

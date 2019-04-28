@@ -2,7 +2,7 @@
 const crateSQLBuilder = require('./index')
 
 test('get simple query', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'get',
         table: 'friends',
         where: `id = 'aaa'`
@@ -10,7 +10,7 @@ test('get simple query', () => {
 })
 
 test('get specifying fields', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'get',
         table: 'friends',
         fields: ['id', 'first_name', 'email'],
@@ -19,7 +19,7 @@ test('get specifying fields', () => {
 })
 
 test('insert no ID', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -30,7 +30,7 @@ test('insert no ID', () => {
 })
 
 test('insert with ID', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -42,7 +42,7 @@ test('insert with ID', () => {
 })
 
 test('insert with object array, single element', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -56,7 +56,7 @@ test('insert with object array, single element', () => {
 })
 
 test('insert with object array, multiple keys', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -72,7 +72,7 @@ test('insert with object array, multiple keys', () => {
     })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_foods) VALUES ('ddd','Dog','d@d.com',[{lunch='sandwich',dinner='sushi'}]);`)
 })
 test('insert with object array, multiple elements', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -90,7 +90,7 @@ test('insert with object array, multiple elements', () => {
 })
 
 test('insert with object', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -106,7 +106,7 @@ test('insert with object', () => {
 })
 
 test('insert with object and object array, multiple elements', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'insert',
         table: 'friends',
         doc: {
@@ -126,7 +126,7 @@ test('insert with object and object array, multiple elements', () => {
 })
 
 test('simple update', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'update',
         table: 'friends',
         id: 'xyz',
@@ -138,7 +138,7 @@ test('simple update', () => {
 })
 
 test('update with array', () => {
-    expect (crateSQLBuilder.req.action({
+    expect (crateSQLBuilder.buildSQL({
         method: 'arrayPush',
         table: 'friends',
         id: 'ccc',

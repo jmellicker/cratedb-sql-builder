@@ -1,5 +1,5 @@
 {
-    "name": "@jmellicker/crateDB-sql-builder",
+    "name": "@jmellicker/cratedbsqlbuilder",
     "version": "0.0.17",
     "main": "index.js",
     "description": "CrateDB SQL builder",
@@ -16,6 +16,9 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jmellicker//crate-sql-builder.git"
+    },
+    "publishConfig": {
+      "access": "public"
     },
     "license": "MIT"
 }

@@ -1,8 +1,10 @@
 # crate-sql-lib
 Creates correct CrateDB SQL syntax from sensible objects.
 
-test:
+install:
+`yarn add @jmellicker/cratedbsqlbuilder`
 
+test:
 `yarn test`
 
 MIT license
