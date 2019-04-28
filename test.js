@@ -102,59 +102,51 @@ test('insert with object', () => {
                 sea: 'whale'
             }
         }
-    })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_animals) VALUES ('eee','Eagle','e@e.com',{land='raptor',sea='whale'})`)
+    })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_animals) VALUES ('eee','Eagle','e@e.com',{land='raptor',sea='whale'});`)
 })
 
-// not working
-// test('insert with object and object array, multiple elements', () => {
-//     expect (crateSQLBuilder.req.action({
-//         method: 'insert',
-//         table: 'friends',
-//         doc: {
-//             id: 'fff',
-//             first_name: 'Fox',
-//             user_email: 'f@f.com',
-//             favorite_animals: {
-//                 land: 'raptor',
-//                 sea: 'whale'
-//             },
-//             favorite_foods: [{
-//                 lunch: 'pizza',
-//                 dinner: 'burgers'
-//             }]
-//         }
-//     })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_foods,favorite_animals) VALUES ('fff','Fox','f@f.com',[{lunch='pizza'}, {dinner='burgers'}],{land='raptor',sea='whale'})`)
-// })
+test('insert with object and object array, multiple elements', () => {
+    expect (crateSQLBuilder.req.action({
+        method: 'insert',
+        table: 'friends',
+        doc: {
+            id: 'fff',
+            first_name: 'Fox',
+            user_email: 'f@f.com',
+            favorite_animals: {
+                land: 'raptor',
+                sea: 'whale'
+            },
+            favorite_foods: [{
+                lunch: 'pizza',
+                dinner: 'burgers'
+            }]
+        }
+    })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_animals,favorite_foods) VALUES ('fff','Fox','f@f.com',{land='raptor',sea='whale'},[{lunch='pizza',dinner='burgers'}]);`)
+})
 
+test('simple update', () => {
+    expect (crateSQLBuilder.req.action({
+        method: 'update',
+        table: 'friends',
+        id: 'xyz',
+        doc: {
+            first_name: 'Robert',
+            user_email: 'bob@b.com'
+        }
+    })).toBe(`UPDATE friends SET first_name='Robert',user_email='bob@b.com' WHERE id = 'xyz';`)
+})
 
-// test('simple update', () => {
-//     expect (crateSQLBuilder.req.action({
-//         method: 'update',
-//         table: 'friends',
-//         id: 'xyz',
-//         doc: {
-//             first_name: 'Robert',
-//             user_email: 'bob@b.com'
-//         }
-//     })).toBe(`UPDATE friends SET first_name='Robert',user_email='bob@b.com' WHERE id = 'xyz'`)
-// })
-
-// test('update with array', () => {
-//     expect (crateSQLBuilder.req.action({
-//         method: 'addToArray',
-//         table: 'friends',
-//         id: 'ccc',
-//         doc: {
-//             favorite_foods: {
-//                 push: 'waffles'
-//             }
-//         }
-//         operation: () => {
-//             favorite_foods.push({
-//                 breakfast: 'waffles'
-//             })
-//         }
-//     })).toBe(`UPDATE friends SET favorite_foods = array_cat(favorite_foods, [{ breakfast = 'waffles' }]) WHERE id = 'ccc';`)
-// })
+test('update with array', () => {
+    expect (crateSQLBuilder.req.action({
+        method: 'arrayPush',
+        table: 'friends',
+        id: 'ccc',
+        doc: {
+            columnName: 'favorite_foods',
+            value: `[{dinner = 'dogfood'}]`
+        }
+    })).toBe(`UPDATE friends SET favorite_foods = array_cat(favorite_foods, [{dinner = 'dogfood'}]) WHERE id = 'ccc';`)
+})
 
  

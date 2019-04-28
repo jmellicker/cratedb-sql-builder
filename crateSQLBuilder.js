@@ -6,7 +6,7 @@ module.exports = {
         description: "accepts a request object, executes and returns a result",
         action: (request) => {
             let sql = sqlBuilder[request.method](request)
-            sql = sql.replace(/\s\s+/g, ' ').trimRight() + ';'
+            sql = sql.replace(/\s\s+/g, ' ').trim() + ';'
             return sql
         }
     }
@@ -112,12 +112,10 @@ sqlBuilder = {
 }
 
 function createInsertSyntax(data) {
-    let res, str
-    // c.bbh('data')
-    // c.b(data)
+    let res
 
     switch (true) {
-        case Array.isArray(data): // this is not working yet
+        case Array.isArray(data):
             return `[${ data.map(e => {
                 return `{${ Object.keys(e).map(k => {
                     return `${ k }=${ j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(e[k])) }`
@@ -126,15 +124,11 @@ function createInsertSyntax(data) {
             break
 
         case typeof data === 'object':
-            c.oh('object')
-            str = `{${ Object.keys(data).map(k => {
+            return `{${ Object.keys(data).map(k => {
                 res = j_.addAdditionalSingleQuoteIfString(data[k]) // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
                 res = j_.quoteIfString(res) // add single quotes if a string
                 return `${ k }=${ res }`
-                // return `${ k }=${ j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(data[k])) }` // harder to read this code
             }).join() }}`
-            c.o(str)
-            return str
             break
 
         default:
