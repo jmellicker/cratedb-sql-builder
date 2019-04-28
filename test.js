@@ -18,17 +18,6 @@ test('get specifying fields', () => {
     })).toBe(`SELECT id,first_name,email FROM friends WHERE id = 'aaa';`)
 })
 
-test('insert no ID', () => {
-    expect (crateSQLBuilder.buildSQL({
-        method: 'insert',
-        table: 'friends',
-        doc: {
-            first_name: 'Ava',
-            user_email: 'a@a.com'
-        }
-    })).toContain(`INSERT INTO friends (first_name,user_email,id) VALUES ('Ava','a@a.com',`)
-})
-
 test('insert with ID', () => {
     expect (crateSQLBuilder.buildSQL({
         method: 'insert',
@@ -147,6 +136,19 @@ test('update with array', () => {
             value: `[{dinner = 'dogfood'}]`
         }
     })).toBe(`UPDATE friends SET favorite_foods = array_cat(favorite_foods, [{dinner = 'dogfood'}]) WHERE id = 'ccc';`)
+})
+
+test('alter table', () => {
+    expect (crateSQLBuilder.buildSQL({
+        environmentID: 'teamcode',
+        method: 'alterTable',
+        table: 'friends',
+        op: 'addField',
+        newField: {
+            fieldName: 'hair',
+            fieldType: 'boolean'
+        }
+    })).toBe(`ALTER TABLE friends ADD COLUMN hair boolean;`)
 })
 
  

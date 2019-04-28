@@ -95,7 +95,7 @@ sqlBuilder = {
     // ---------------- alterTable ---------------- //
 
     alterTable: (request) => {
-        return `ALTER TABLE ${ table} ADD COLUMN ${ request.newField.fieldName } ${ request.newField.fieldType }`
+        return `ALTER TABLE ${ request.table} ADD COLUMN ${ request.newField.fieldName } ${ request.newField.fieldType }`
 
     },
 
