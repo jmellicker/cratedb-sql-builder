@@ -1,8 +1,11 @@
 {
   "devDependencies": {
+    "@jmellicker/j_": "^0.0.16",
+    "cli-color": "^1.4.0",
     "jest": "^24.7.1"
   },
   "scripts": {
     "test": "jest"
-  }
+  },
+  "license": "MIT"
 }
