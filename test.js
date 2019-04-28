@@ -1,5 +1,5 @@
 
-const crateSQLBuilder = require('./crateSQLBuilder')
+const crateSQLBuilder = require('./index')
 
 test('get simple query', () => {
     expect (crateSQLBuilder.req.action({

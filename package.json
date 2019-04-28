@@ -1,11 +1,21 @@
 {
-  "devDependencies": {
-    "@jmellicker/j_": "^0.0.16",
-    "cli-color": "^1.4.0",
-    "jest": "^24.7.1"
-  },
-  "scripts": {
-    "test": "jest"
-  },
-  "license": "MIT"
+    "name": "@jmellicker/crateDB-sql-builder",
+    "version": "0.0.17",
+    "main": "index.js",
+    "description": "CrateDB SQL builder",
+    "devDependencies": {
+        "@jmellicker/j_": "^0.0.16",
+        "cli-color": "^1.4.0",
+        "jest": "^24.7.1",
+        "release-it": "*"
+    },
+    "scripts": {
+        "test": "jest",
+        "release": "release-it"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jmellicker//crate-sql-builder.git"
+    },
+    "license": "MIT"
 }
