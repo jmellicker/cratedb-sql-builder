@@ -89,21 +89,21 @@ test('insert with object array, multiple elements', () => {
     })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_foods) VALUES ('ddd','Dog','d@d.com',[{lunch='sandwich'},{dinner='sushi'}]);`)
 })
 
-// test('insert with object', () => {
-//     expect (crateSQLBuilder.req.action({
-//         method: 'insert',
-//         table: 'friends',
-//         doc: {
-//             id: 'eee',
-//             first_name: 'Eagle',
-//             user_email: 'e@e.com',
-//             favorite_animals: {
-//                 land: 'raptor',
-//                 sea: 'whale'
-//             }
-//         }
-//     })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_animals) VALUES ('eee','Eagle','e@e.com',{land='raptor',sea='whale'})`)
-// })
+test('insert with object', () => {
+    expect (crateSQLBuilder.req.action({
+        method: 'insert',
+        table: 'friends',
+        doc: {
+            id: 'eee',
+            first_name: 'Eagle',
+            user_email: 'e@e.com',
+            favorite_animals: {
+                land: 'raptor',
+                sea: 'whale'
+            }
+        }
+    })).toBe(`INSERT INTO friends (id,first_name,user_email,favorite_animals) VALUES ('eee','Eagle','e@e.com',{land='raptor',sea='whale'})`)
+})
 
 // not working
 // test('insert with object and object array, multiple elements', () => {
