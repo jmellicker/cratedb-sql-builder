@@ -126,9 +126,9 @@ test('simple update', () => {
     })).toBe(`UPDATE friends SET first_name='Robert',user_email='bob@b.com' WHERE id = 'xyz';`)
 })
 
-test('update with array', () => {
+test('push new element onto array field', () => {
     expect (crateSQLBuilder.buildSQL({
-        method: 'arrayPush',
+        method: 'arrayFieldPush',
         table: 'friends',
         id: 'ccc',
         doc: {
@@ -136,6 +136,18 @@ test('update with array', () => {
             value: `[{dinner = 'dogfood'}]`
         }
     })).toBe(`UPDATE friends SET favorite_foods = array_cat(favorite_foods, [{dinner = 'dogfood'}]) WHERE id = 'ccc';`)
+})
+
+test('delete element from array field', () => {
+    expect (crateSQLBuilder.buildSQL({
+        method: 'arrayFieldDelete',
+        table: 'friends',
+        id: 'ccc',
+        doc: {
+            columnName: 'favorite_foods',
+            value: `[{dinner = 'dogfood'}]`
+        }
+    })).toBe(`UPDATE friends SET favorite_foods = array_difference(favorite_foods, [{dinner = 'dogfood'}]) WHERE id = 'ccc';`)
 })
 
 test('alter table', () => {

@@ -65,13 +65,24 @@ sqlBuilder = {
         return `DELETE FROM ${ request.table } WHERE id = '${ request.id }'`
     },
 
-    // ---------------- arrayPush ---------------- //
+    // ---------------- arrayFieldPush ---------------- //
 
-    arrayPush: (request) => {
+    arrayFieldPush: (request) => {
         return `
             UPDATE ${ request.table }
             SET ${ request.doc.columnName } =
             array_cat(${ request.doc.columnName }, ${ request.doc.value })
+            WHERE id = '${ request.id }'
+        `
+    },
+
+    // ---------------- arrayFieldDelete ---------------- //
+
+    arrayFieldDelete: (request) => {
+        return `
+            UPDATE ${ request.table }
+            SET ${ request.doc.columnName } =
+            array_difference(${ request.doc.columnName }, ${ request.doc.value })
             WHERE id = '${ request.id }'
         `
     },
