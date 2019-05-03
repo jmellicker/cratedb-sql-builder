@@ -1,5 +1,4 @@
 const j_ = require('@jmellicker/j_')
-const c = require('./logs')
 
 module.exports = {
     buildSQL(request) {
