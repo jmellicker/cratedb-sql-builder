@@ -1,6 +1,6 @@
 {
     "name": "@jmellicker/cratedbsqlbuilder",
-    "version": "0.0.21",
+    "version": "0.0.22",
     "main": "index.js",
     "description": "CrateDB SQL builder",
     "devDependencies": {
