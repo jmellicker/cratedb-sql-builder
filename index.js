@@ -1,148 +1,146 @@
 module.exports = {
-    buildSQL(request) {
-        let sql = sqlBuilder[request.method](request)
-        sql = sql.replace(/\s\s+/g, ' ').trim() + ';'
-        return sql
-    }
+  buildSQL(request) {
+    return sqlBuilder[request.method](request).replace(/\s\s+/g, ' ').trim() + ';'
+  }
 }
 
 sqlBuilder = {
 
-    // ---------------- get  ---------------- //
+  // ---------------- get  ---------------- //
 
-    get: (request) => {
-        sql = `SELECT ${ request.fields || '*' } FROM ${ request.table }`
-        if (request.where) sql += ` WHERE ${ request.where }`
-        return sql
-    },
+  get: request => {
+    sql = `SELECT ${request.fields || '*'} FROM ${request.table}`
+    if (request.where) sql += ` WHERE ${request.where}`
+    return sql
+  },
 
-    // ---------------- insert ---------------- //
+  // ---------------- insert ---------------- //
 
-    insert: (request) => {
-        let insertMap = Object.keys(request.doc).map(k => {
-            return {
-                key: k,
-                value: createInsertSyntax(request.doc[k])
-            }
-        })
+  insert: request => {
+    let insertMap = Object.keys(request.doc).map(k => {
+      return {
+        key: k,
+        value: createInsertSyntax(request.doc[k])
+      }
+    })
 
-        return `INSERT INTO ${ request.table }
-            (${ insertMap.map(e => { return e.key }).join() })
-            VALUES (${ insertMap.map(e => { return e.value }).join() })
-        `
-    },
+    return `INSERT INTO ${request.table}
+      (${ insertMap.map(e => { return e.key }).join()})
+      VALUES (${ insertMap.map(e => { return e.value }).join()})
+    `
+  },
 
-    // ---------------- update ---------------- //
+  // ---------------- update ---------------- //
 
-    update: (request) => {
-        columns = Object.keys(request.doc)
-        let theValues = []
+  update: request => {
+    columns = Object.keys(request.doc)
+    let theValues = []
 
-        for (let prop in request.doc) {
-            if (typeof request.doc[prop] !== 'object') {
-                theValues.push(prop + '=' + quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop])))
-            }
-            else {
-                for (let key in request.doc[prop]) {
-                    theValues.push(`${ prop }['${ key }']=${ quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop][key])) }`)
-                }
-            }
+    for (let prop in request.doc) {
+      if (typeof request.doc[prop] !== 'object') {
+        theValues.push(prop + '=' + quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop])))
+      }
+      else {
+        for (let key in request.doc[prop]) {
+          theValues.push(`${prop}['${key}']=${quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop][key]))}`)
         }
+      }
+    }
 
-        return `
-            UPDATE ${ request.table }
-            SET ${ theValues.join() }
-            WHERE id = '${ request.id }'
-        `
-    },
+    return `
+      UPDATE ${ request.table}
+      SET ${ theValues.join()}
+      WHERE id = '${ request.id}'
+    `
+  },
 
-    // ---------------- deleteRow ---------------- //
+  // ---------------- deleteRow ---------------- //
 
-    deleteRow: (request) => {
-        return `DELETE FROM ${ request.table } WHERE id = '${ request.id }'`
-    },
+  deleteRow: request => {
+    return `DELETE FROM ${request.table} WHERE id = '${request.id}'`
+  },
 
-    // ---------------- arrayFieldPush ---------------- //
+  // ---------------- arrayFieldPush ---------------- //
 
-    arrayFieldPush: (request) => {
-        return `
-            UPDATE ${ request.table }
-            SET ${ request.doc.columnName } =
-            array_cat(${ request.doc.columnName }, ${ request.doc.value })
-            WHERE id = '${ request.id }'
-        `
-    },
+  arrayFieldPush: request => {
+    return `
+      UPDATE ${ request.table}
+      SET ${ request.doc.columnName} =
+      array_cat(${ request.doc.columnName}, ${request.doc.value})
+      WHERE id = '${ request.id}'
+    `
+  },
 
-    // ---------------- arrayFieldDelete ---------------- //
+  // ---------------- arrayFieldDelete ---------------- //
 
-    arrayFieldDelete: (request) => {
-        return `
-            UPDATE ${ request.table }
-            SET ${ request.doc.columnName } =
-            array_difference(${ request.doc.columnName }, ${ request.doc.value })
-            WHERE id = '${ request.id }'
-        `
-    },
+  arrayFieldDelete: request => {
+    return `
+      UPDATE ${ request.table}
+      SET ${ request.doc.columnName} =
+      array_difference(${ request.doc.columnName}, ${request.doc.value})
+      WHERE id = '${ request.id}'
+    `
+  },
 
-    // ---------------- createTable ---------------- //
+  // ---------------- createTable ---------------- //
 
-    createTable: (request) => {
-        return `create table ${ request.table } (
+  createTable: request => {
+    return `create table ${request.table} (
             ${ Object.keys(request.fields).map(fieldName => {
-                // c.g(fieldName)
-                if (fieldName === 'primaryKey') {
-                    return 'primary key (' +  request.fields[fieldName] + ')'
-                } else {
-                    return fieldName + ' ' + request.fields[fieldName]
-                }
-            }).join(',\n') }
+      // c.g(fieldName)
+      if (fieldName === 'primaryKey') {
+        return 'primary key (' + request.fields[fieldName] + ')'
+      } else {
+        return fieldName + ' ' + request.fields[fieldName]
+      }
+    }).join(',\n')}
         )`
 
-    },
+  },
 
-    // ---------------- alterTable ---------------- //
+  // ---------------- alterTable ---------------- //
 
-    alterTable: (request) => {
-        return `ALTER TABLE ${ request.table} ADD COLUMN ${ request.newField.fieldName } ${ request.newField.fieldType }`
+  alterTable: request => {
+    return `ALTER TABLE ${request.table} ADD COLUMN ${request.newField.fieldName} ${request.newField.fieldType}`
 
-    },
+  },
 
-    // ---------------- dropTable ---------------- //
+  // ---------------- dropTable ---------------- //
 
-    dropTable: (request) => {
-        return `DROP TABLE IF EXISTS ${ request.table }`
-    }
+  dropTable: request => {
+    return `DROP TABLE IF EXISTS ${request.table}`
+  }
 }
 
 function createInsertSyntax(data) {
-    let res
+  let res
 
-    switch (true) {
-        case Array.isArray(data):
-            return `[${ data.map(e => {
-                return `{${ Object.keys(e).map(k => {
-                    return `${ k }=${ quoteIfString(addAdditionalSingleQuoteIfString(e[k])) }`
-                }).join() }}`
-            }).join() }]`
-            break
+  switch (true) {
+    case Array.isArray(data):
+      return `[${data.map(e => {
+        return `{${Object.keys(e).map(k => {
+          return `${k}=${quoteIfString(addAdditionalSingleQuoteIfString(e[k]))}`
+        }).join()}}`
+      }).join()}]`
+      break
 
-        case typeof data === 'object':
-            return `{${ Object.keys(data).map(k => {
-                res = addAdditionalSingleQuoteIfString(data[k]) // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
-                res = quoteIfString(res) // add single quotes if a string
-                return `${ k }=${ res }`
-            }).join() }}`
-            break
+    case typeof data === 'object':
+      return `{${Object.keys(data).map(k => {
+        res = addAdditionalSingleQuoteIfString(data[k]) // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
+        res = quoteIfString(res) // add single quotes if a string
+        return `${k}=${res}`
+      }).join()}}`
+      break
 
-        default:
-            return quoteIfString(addAdditionalSingleQuoteIfString(data))
-    }
+    default:
+      return quoteIfString(addAdditionalSingleQuoteIfString(data))
+  }
 }
 
-function quoteIfString (input) {
-return typeof input === 'string' ? `'${ input }'` : input
+function quoteIfString(input) {
+  return typeof input === 'string' ? `'${input}'` : input
 }
 
-function addAdditionalSingleQuoteIfString (input) {
-return typeof input === 'string' ? input.replace(/'/g, "''") : input
+function addAdditionalSingleQuoteIfString(input) {
+  return typeof input === 'string' ? input.replace(/'/g, "''") : input
 }
