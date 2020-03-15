@@ -1,4 +1,3 @@
-
 const crateSQLBuilder = require('./index')
 
 test('get simple query', () => {

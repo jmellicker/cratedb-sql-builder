@@ -1,5 +1,3 @@
-const j_ = require('@jmellicker/j_')
-
 module.exports = {
     buildSQL(request) {
         let sql = sqlBuilder[request.method](request)
@@ -42,11 +40,11 @@ sqlBuilder = {
 
         for (let prop in request.doc) {
             if (typeof request.doc[prop] !== 'object') {
-                theValues.push(prop + '=' + j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(request.doc[prop])))
+                theValues.push(prop + '=' + quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop])))
             }
             else {
                 for (let key in request.doc[prop]) {
-                    theValues.push(`${ prop }['${ key }']=${ j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(request.doc[prop][key])) }`)
+                    theValues.push(`${ prop }['${ key }']=${ quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop][key])) }`)
                 }
             }
         }
@@ -123,20 +121,28 @@ function createInsertSyntax(data) {
         case Array.isArray(data):
             return `[${ data.map(e => {
                 return `{${ Object.keys(e).map(k => {
-                    return `${ k }=${ j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(e[k])) }`
+                    return `${ k }=${ quoteIfString(addAdditionalSingleQuoteIfString(e[k])) }`
                 }).join() }}`
             }).join() }]`
             break
 
         case typeof data === 'object':
             return `{${ Object.keys(data).map(k => {
-                res = j_.addAdditionalSingleQuoteIfString(data[k]) // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
-                res = j_.quoteIfString(res) // add single quotes if a string
+                res = addAdditionalSingleQuoteIfString(data[k]) // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
+                res = quoteIfString(res) // add single quotes if a string
                 return `${ k }=${ res }`
             }).join() }}`
             break
 
         default:
-            return j_.quoteIfString(j_.addAdditionalSingleQuoteIfString(data))
+            return quoteIfString(addAdditionalSingleQuoteIfString(data))
     }
+}
+
+function quoteIfString (input) {
+return typeof input === 'string' ? `'${ input }'` : input
+}
+
+function addAdditionalSingleQuoteIfString (input) {
+return typeof input === 'string' ? input.replace(/'/g, "''") : input
 }

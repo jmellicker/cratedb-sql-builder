@@ -4,7 +4,6 @@
     "main": "index.js",
     "description": "CrateDB SQL builder",
     "devDependencies": {
-        "@jmellicker/j_": "^0.0.16",
         "jest": "^24.7.1",
         "release-it": "*"
     },
@@ -14,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/jmellicker/crate-sql-builder"
+        "url": "https://github.com/jmellicker/cratedb-sql-builder"
     },
     "publishConfig": {
         "access": "public"
