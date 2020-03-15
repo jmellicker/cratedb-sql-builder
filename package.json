@@ -9,7 +9,7 @@
     },
     "scripts": {
         "test": "jest",
-        "release": "release-it"
+        "release": "release-it --ci"
     },
     "repository": {
         "type": "git",
