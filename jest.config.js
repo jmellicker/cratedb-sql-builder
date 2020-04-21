@@ -1,3 +1,6 @@
 module.exports = {
-  preset: 'rollup-jest'
+  preset: 'ts-jest',
+  "transform": {
+    "\\.m?js$": "rollup-jest"
+  },
 }

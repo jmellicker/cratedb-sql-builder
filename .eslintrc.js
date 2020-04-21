@@ -20,6 +20,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'space-before-function-paren': 1
+    'space-before-function-paren': 1,
   },
 };

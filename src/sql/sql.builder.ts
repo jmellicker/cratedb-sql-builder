@@ -1,26 +1,38 @@
 import { quoteIfString, addAdditionalSingleQuoteIfString } from '../utils/string.utils'
+import {
+  GetRequest,
+  InsertRequest,
+  DeleteRequest,
+  UpdateRequest,
+  CreateTableRequest,
+  AlterTableRequest,
+  DropTableRequest,
+} from './Request'
 
-export default {
-  get (request) {
+export const sqlBuilder = {
+  get (request: GetRequest) {
     let sql = `SELECT ${request.fields || '*'} FROM ${request.table}`;
     if (request.where) sql += ` WHERE ${request.where}`;
     return sql;
   },
-  insert (request) {
-    const insertMap = Object.keys(request.doc).map((k) => ({
-      key: k,
-      value: createInsertSyntax(request.doc[k]),
-    }));
+  insert (request: InsertRequest) {
+    const insertMap = (Object.keys(request.doc) as (keyof typeof request.doc)[])
+      .map(
+        (key) => ({
+          key,
+          value: createInsertSyntax(request.doc[key]),
+        })
+      );
 
     return `INSERT INTO ${request.table}
       (${insertMap.map((e) => e.key).join()})
       VALUES (${insertMap.map((e) => e.value).join()})
     `;
   },
-  update (request) {
+  update (request: UpdateRequest) {
     const theValues = [];
 
-    for (const prop of Object.keys(request.doc)) {
+    for (const prop of Object.keys(request.doc) as (keyof typeof request.doc)[]) {
       if (typeof request.doc[prop] !== 'object') {
         theValues.push(`${prop}=${quoteIfString(addAdditionalSingleQuoteIfString(request.doc[prop]))}`);
       } else {
@@ -37,41 +49,44 @@ export default {
     `;
   },
 
-  deleteRow: (request) => `DELETE FROM ${request.table} WHERE id = '${request.id}'`,
+  deleteRow: (request: DeleteRequest) => `DELETE FROM ${request.table} WHERE id = '${request.id}'`,
 
-  arrayFieldPush: (request) => `
+  arrayFieldPush: (request: UpdateRequest) => `
       UPDATE ${request.table}
       SET ${request.doc.columnName} =
       array_cat(${request.doc.columnName}, ${request.doc.value})
       WHERE id = '${request.id}'
     `,
 
-  arrayFieldDelete: (request) => `
+  arrayFieldDelete: (request: UpdateRequest) => `
       UPDATE ${request.table}
       SET ${request.doc.columnName} =
       array_difference(${request.doc.columnName}, ${request.doc.value})
       WHERE id = '${request.id}'
     `,
 
-  createTable: (request) => `create table ${request.table} (
-            ${Object.keys(request.fields).map((fieldName) => {
-    // c.g(fieldName)
-    if (fieldName === 'primaryKey') {
-      return `primary key (${request.fields[fieldName]})`;
-    }
-    return `${fieldName} ${request.fields[fieldName]}`;
-  }).join(',\n')}
-        )`,
+  createTable: (request: CreateTableRequest) => {
+    const append = Object.keys(request.fields).map((fieldName) => {
+      if (fieldName === 'primaryKey') {
+        return `primary key (${request.fields[fieldName]})`;
+      }
+      return `${fieldName} ${request.fields[fieldName]}`;
+    }).join(',\n')
 
-  alterTable: (request) => `ALTER TABLE ${request.table} ADD COLUMN ${request.newField.fieldName} ${request.newField.fieldType}`,
+    return `create table ${request.table} (${append})`
+  },
 
-  dropTable: (request) => `DROP TABLE IF EXISTS ${request.table}`,
+  alterTable: (request: AlterTableRequest) => `ALTER TABLE ${request.table} ADD COLUMN ${request.newField.fieldName} ${request.newField.fieldType}`,
+
+  dropTable: (request: DropTableRequest) => `DROP TABLE IF EXISTS ${request.table}`,
 };
 
-function createInsertSyntax (data) {
+function createInsertSyntax (data: string[] | Record<string, string> | string): string {
   let res;
 
   if (Array.isArray(data)) {
+    // TODO: fix types
+    // @ts-ignore
     return `[${data.map((e) => `{${Object.keys(e).map((k) => `${k}=${quoteIfString(addAdditionalSingleQuoteIfString(e[k]))}`).join()}}`).join()}]`;
   }
 
