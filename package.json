@@ -14,7 +14,7 @@
     },
     "scripts": {
         "test": "jest",
-        "dev": "jest --watchAll",
+        "dev": "jest --watchAll --collectCoverage",
         "build": "rollup -c",
         "lint": "eslint . --ext .js"
     },
