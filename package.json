@@ -2,28 +2,27 @@
     "name": "@jmellicker/cratedbsqlbuilder",
     "version": "0.0.25",
     "main": "dist/cratedb-sql-builder.common.js",
-    "module": "dist/cratedb-sql-builder.esm.js",
+    "types": "dist/types",
     "description": "CrateDB SQL builder",
     "devDependencies": {
-        "@rollup/plugin-typescript": "^4.1.1",
         "@types/jest": "^25.2.1",
         "eslint": "^6.8.0",
         "eslint-plugin-import": "^2.20.2",
         "eslint-plugin-jest": "^23.8.2",
         "jest": "^24.7.1",
         "release-it": "*",
-        "rollup": "^2.6.1",
-        "rollup-jest": "^0.0.2",
-        "rollup-plugin-terser": "^5.3.0",
         "terser": "^4.6.11",
         "ts-jest": "^25.4.0",
+        "ts-loader": "^7.0.1",
         "tslib": "^1.11.1",
-        "typescript": "^3.8.3"
+        "typescript": "^3.8.3",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
     },
     "scripts": {
         "test": "jest",
         "dev": "jest --watchAll --collectCoverage",
-        "build": "rollup -c",
+        "build": "webpack",
         "lint": "eslint . --ext .js,.ts"
     },
     "repository": {
@@ -33,5 +32,6 @@
     "publishConfig": {
         "access": "public"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {}
 }

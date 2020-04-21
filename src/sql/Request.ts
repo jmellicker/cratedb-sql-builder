@@ -1,5 +1,3 @@
-import { Doc } from "./Doc";
-
 export interface GetRequest {
   method: 'get'
   fields?: string | string[]
