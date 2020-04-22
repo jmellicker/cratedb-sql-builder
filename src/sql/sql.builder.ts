@@ -9,6 +9,38 @@ import {
   DropTableRequest,
 } from './Request'
 
+// TODO: refactor. It's too hard to understand what it does
+function createInsertSyntax (data: Record<string, string>[] | Record<string, string> | string): string {
+  let res;
+
+  if (Array.isArray(data)) {
+    const var1 = data.map(
+      (obj) => {
+        const mapped = Object.keys(obj).map(
+          (k) => {
+            const value = obj[k]
+            const quotedValue = quoteIfString(addAdditionalSingleQuoteIfString(value))
+            return `${k}=${quotedValue}`
+          }
+        ).join()
+
+        return `{${mapped}}`
+      }
+    ).join()
+    return `[${var1}]`;
+  }
+
+  if (typeof data === 'object') {
+    return `{${Object.keys(data).map((k) => {
+      res = addAdditionalSingleQuoteIfString(data[k]); // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
+      res = quoteIfString(res); // add single quotes if a string
+      return `${k}=${res}`;
+    }).join()}}`;
+  }
+
+  return quoteIfString(addAdditionalSingleQuoteIfString(data));
+}
+
 export const sqlBuilder = {
   get (request: GetRequest) {
     let sql = `SELECT ${request.fields || '*'} FROM ${request.table}`;
@@ -80,23 +112,3 @@ export const sqlBuilder = {
 
   dropTable: (request: DropTableRequest) => `DROP TABLE IF EXISTS ${request.table}`,
 };
-
-function createInsertSyntax (data: string[] | Record<string, string> | string): string {
-  let res;
-
-  if (Array.isArray(data)) {
-    // TODO: fix types
-    // @ts-ignore
-    return `[${data.map((e) => `{${Object.keys(e).map((k) => `${k}=${quoteIfString(addAdditionalSingleQuoteIfString(e[k]))}`).join()}}`).join()}]`;
-  }
-
-  if (typeof data === 'object') {
-    return `{${Object.keys(data).map((k) => {
-      res = addAdditionalSingleQuoteIfString(data[k]); // this is how Crate escapes a single quote... with two single quotes in a row (in case there is a single quote in the value)
-      res = quoteIfString(res); // add single quotes if a string
-      return `${k}=${res}`;
-    }).join()}}`;
-  }
-
-  return quoteIfString(addAdditionalSingleQuoteIfString(data));
-}

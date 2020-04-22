@@ -5,11 +5,16 @@ module.exports = {
     node: true,
     "jest/globals": true
   },
+  root: true,
+  parser: '@typescript-eslint/parser',
   plugins: [
-    'jest'
+    'jest',
+    '@typescript-eslint',
   ],
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -21,5 +26,8 @@ module.exports = {
   },
   rules: {
     'space-before-function-paren': 1,
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/camelcase': 0
   },
 };

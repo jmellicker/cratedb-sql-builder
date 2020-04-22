@@ -1,48 +1,48 @@
 export interface GetRequest {
-  method: 'get'
-  fields?: string | string[]
-  table: string
-  where: string
+  method: 'get';
+  fields?: string | string[];
+  table: string;
+  where?: string;
 }
 
 export interface InsertRequest {
-  method: 'insert'
-  doc: Record<string, any>
-  table: string
+  method: 'insert';
+  doc: Record<string, any>;
+  table: string;
 }
 
 export interface DeleteRequest {
-  method: 'deleteRow'
-  id: number | string
-  table: string
+  method: 'deleteRow';
+  id: number | string;
+  table: string;
 }
 
 export interface UpdateRequest {
-  method: 'update' | 'arrayFieldDelete' | 'arrayFieldPush'
-  id: number | string
-  doc: Record<string, any>
-  table: string
+  method: 'update' | 'arrayFieldDelete' | 'arrayFieldPush';
+  id: number | string;
+  doc: Record<string, any>;
+  table: string;
 }
 
 export interface CreateTableRequest {
-  method: 'createTable'
-  table: string
-  fields: Record<string, string>
+  method: 'createTable';
+  table: string;
+  fields: Record<string, string>;
 }
 
 export interface AlterTableRequest {
-  method: 'alterTable'
-  table: string
+  method: 'alterTable';
+  table: string;
   newField: {
-    fieldName: string
+    fieldName: string;
     // TODO: narrow down fieldTypes
-    fieldType: string
-  }
+    fieldType: string;
+  };
 }
 
 export interface DropTableRequest {
-  method: 'dropTable'
-  table: string
+  method: 'dropTable';
+  table: string;
 }
 
 export type Request =
@@ -53,3 +53,7 @@ export type Request =
   CreateTableRequest |
   AlterTableRequest |
   DropTableRequest
+
+export type TransformKeysRequest =
+  InsertRequest |
+  UpdateRequest

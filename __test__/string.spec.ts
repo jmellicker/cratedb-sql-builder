@@ -17,8 +17,8 @@ describe('testing string utils', () => {
   it('converts camelCase to snake-case', () => {
     expect(stringUtils.camelToSnake('mySnake-str')).toBe('my_snake-str')
     expect(stringUtils.camelToSnake('my-SnakeStr')).toBe('my-_snake_str')
-    expect(stringUtils.camelToSnake('SnakeTwo')).toBe('_snake_two')
-    expect(stringUtils.camelToSnake('stringWith1Number')).toBe('string_with_1_number')
-    expect(stringUtils.camelToSnake('stringWith234Numbers')).toBe('string_with_234_numbers')
+    expect(stringUtils.camelToSnake('SnakeTwo')).toBe('snake_two')
+    expect(stringUtils.camelToSnake('stringWith1Number')).toBe('string_with1_number')
+    expect(stringUtils.camelToSnake('stringWith234Numbers')).toBe('string_with234_numbers')
   })
 })
