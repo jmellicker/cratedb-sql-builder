@@ -17,8 +17,28 @@ export interface DeleteRequest {
   table: string;
 }
 
+export interface ArrayFieldDeleteRequest {
+  method: 'arrayFieldDelete';
+  id: number | string;
+  table: string;
+  doc: {
+    columnName: string;
+    value: number | string;
+  };
+}
+
+export interface ArrayFieldPushRequest {
+  method: 'arrayFieldPush';
+  id: number | string;
+  table: string;
+  doc: {
+    columnName: string;
+    value: number | string;
+  };
+}
+
 export interface UpdateRequest {
-  method: 'update' | 'arrayFieldDelete' | 'arrayFieldPush';
+  method: 'update';
   id: number | string;
   doc: Record<string, any>;
   table: string;
@@ -52,7 +72,9 @@ export type Request =
   DeleteRequest |
   CreateTableRequest |
   AlterTableRequest |
-  DropTableRequest
+  DropTableRequest |
+  ArrayFieldPushRequest |
+  ArrayFieldDeleteRequest
 
 export type TransformKeysRequest =
   InsertRequest |

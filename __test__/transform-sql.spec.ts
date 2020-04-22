@@ -1,4 +1,4 @@
-import crateSQLBuilder from '../src';
+import * as crateSQLBuilder from '../src';
 
 describe('checking if sql keys are correctly transformed', () => {
   it('transforms keys on insert', () => {

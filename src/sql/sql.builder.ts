@@ -7,6 +7,8 @@ import {
   CreateTableRequest,
   AlterTableRequest,
   DropTableRequest,
+  ArrayFieldPushRequest,
+  ArrayFieldDeleteRequest,
 } from './Request'
 
 // TODO: refactor. It's too hard to understand what it does
@@ -83,14 +85,14 @@ export const sqlBuilder = {
 
   deleteRow: (request: DeleteRequest) => `DELETE FROM ${request.table} WHERE id = '${request.id}'`,
 
-  arrayFieldPush: (request: UpdateRequest) => `
+  arrayFieldPush: (request: ArrayFieldPushRequest) => `
       UPDATE ${request.table}
       SET ${request.doc.columnName} =
       array_cat(${request.doc.columnName}, ${request.doc.value})
       WHERE id = '${request.id}'
     `,
 
-  arrayFieldDelete: (request: UpdateRequest) => `
+  arrayFieldDelete: (request: ArrayFieldDeleteRequest) => `
       UPDATE ${request.table}
       SET ${request.doc.columnName} =
       array_difference(${request.doc.columnName}, ${request.doc.value})

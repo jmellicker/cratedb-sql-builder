@@ -1,4 +1,4 @@
-import crateSQLBuilder from '../src';
+import * as crateSQLBuilder from '../src';
 
 describe('testing sql statements', () => {
   it('get simple query', () => {
