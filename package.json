@@ -1,6 +1,6 @@
 {
     "name": "@jmellicker/cratedbsqlbuilder",
-    "version": "0.0.25",
+    "version": "0.0.26",
     "main": "dist/cratedb-sql-builder.common.js",
     "types": "dist/types",
     "description": "CrateDB SQL builder",
